@@ -1,5 +1,6 @@
 #/usr/bin/env python3
 import optparse
+import re
 import subprocess
 
 #aurgements for interface and can be read from command-line in terminal
@@ -28,11 +29,25 @@ def mac_changer(interface,new_mac):
     subprocess.call(["ifconfig", interface ,"hw","ether",new_mac])
     subprocess.call(['ifconfig', interface ,'up'])
 
+def mac_dis(interface):
+    # Checking The output and printing output of a command
+    get_result = subprocess.check_output(["ifconfig", interface])
+
+    print(get_result)
+    result = re.search(r"\w\w:\w\w:\w\w:\w\w:\w\w:\w\w", str(get_result))
+
+    if result:
+        return result.group(0)
+    else:
+        print("[+] No Pattern Maching")
+
+
 options = get_args()
 mac_changer(options.interface,options.new_mac)#passing Interface and Macaddresses as parameters
-print("[+] Your Mac Has Been Changed")
+curr_mac = mac_dis(options.interface)
+if curr_mac==options.new_mac:
+    print("[+] Mac Has Been Changed >>> "+curr_mac)
+else:
+    print("[-] Mac Has Not Changed")
 
-#Checking The output and printing output of a command
-get_result=subprocess.check_output(["ifconfig",options.interface])
-print(get_result)
 
