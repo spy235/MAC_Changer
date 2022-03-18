@@ -32,3 +32,7 @@ options = get_args()
 mac_changer(options.interface,options.new_mac)#passing Interface and Macaddresses as parameters
 print("[+] Your Mac Has Been Changed")
 
+#Checking The output and printing output of a command
+get_result=subprocess.check_output(["ifconfig",options.interface])
+print(get_result)
+
